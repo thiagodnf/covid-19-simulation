@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title>COVID-19 Simulator</title>
+		<meta name="author" content="Thiago Ferreira">
+		<meta name="description" content="COVID-19 Simulator">
+		<meta name="keywords" content="covid-19, simulator">
+		<meta name="robots" content="index, follow">
+        <!-- Vendors -->
+        <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+        <!-- Custom -->
+        <link rel="stylesheet" type="text/css" href="css/style.css"/>
+    </head>
+	<body>
+        <header>
+            <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+                <a class="navbar-brand" href="#">COVID-19 Simulator</a>
+            </nav>
+        </header>
+        <main>
+            <div class="container-fluid">
+                <div class="btn-toolbar mb-3">
+                    <div class="col-9 text-left ml-0 pl-0">
+                        <button id="btn-start" class="btn btn-outline-secondary">
+                            <i class="fas fa-play"></i>&nbsp;Start
+                        </button>
+                        <button id="btn-stop" class="btn btn-outline-secondary">
+                            <i class="fas fa-stop"></i>&nbsp;Stop
+                        </button>
+                        <button id="btn-restart" class="btn btn-outline-secondary">
+                            <i class="fas fa-undo"></i>&nbsp;Restart
+                        </button>
+                    </div>
+                    <div class="col-3 text-right mr-0 pr-0">
+                        <button class="btn btn-secondary" type="button" data-toggle="collapse" data-target="#collapseSettings" id="btn-settings">
+                            <i class="fas fa-cog"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="collapse mb-3" id="collapseSettings">
+                    <div class="card card-body pb-1">
+                        <h5>Settings</h5>
+                        <hr/>
+                        <form id="settings" action="#">
+                            <div class="form-group row">
+                                <label for="populationSize" class="col-sm-3 col-form-label">Population Size</label>
+                                <div class="col-sm-9">
+                                    <input class="form-control" type="number" id="populationSize" name="populationSize" min="1" max="500" value="1" step="1">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="infectedPeople" class="col-sm-3 col-form-label">Infected People</label>
+                                <div class="col-sm-9">
+                                    <input class="form-control" type="number" id="infectedPeople" name="infectedPeople" min="1" max="500" value="1" step="1">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="timeInfected" class="col-sm-3 col-form-label">Time Infected</label>
+                                <div class="col-sm-9">
+                                    <input class="form-control" type="number" id="timeInfected" name="timeInfected" min="1" max="20" value="3" step="1">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="deathProbability" class="col-sm-3 col-form-label">Death Probability</label>
+                                <div class="col-sm-9">
+                                    <input class="form-control" type="number" id="deathProbability" name="deathProbability" min="0.0" max="1.0" value="0.4" step="0.01">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="speed" class="col-sm-3 col-form-label">Speed</label>
+                                <div class="col-sm-9">
+                                    <input class="form-control" type="number" id="speed" name="speed" min="0.1" max="10.0" value="0.4" step="0.1">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="socialDistancing" class="col-sm-3 col-form-label">Social Distancing</label>
+                                <div class="col-sm-9">
+                                    <input class="form-control" type="number" id="socialDistancing" name="socialDistancing" min="0.0" max="1.0" value="0.0" step="0.01">
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary mb-2">Save</button>
+                            <button type="button" id="btn-cancel" class="btn btn-outline-secondary mb-2">Cancel</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <canvas id="canvas" width="800px" height="600px"></canvas>
+                    </div>
+                    <div class="col-6">
+                        <div id="chart"></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <!-- Vendors -->
+        <script type="text/javascript" src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+        <script type="text/javascript" src="https://code.highcharts.com/highcharts.src.js"></script>
+        <script type="text/javascript" src="https://code.highcharts.com/modules/exporting.js"></script>
+        <script type="text/javascript" src="https://code.highcharts.com/6/modules/export-data.js"></script>
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+        <script type="text/javascript" src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+        <!-- Custom -->
+        <script type="text/javascript" src="js/arrays.js"></script>
+        <script type="text/javascript" src="js/component.js"></script>
+        <script type="text/javascript" src="js/component.person.js"></script>
+        <script type="text/javascript" src="js/event.emitter.js"></script>
+        <script type="text/javascript" src="js/collision.js"></script>
+        <script type="text/javascript" src="js/random.js"></script>
+        <script type="text/javascript" src="js/canvas.js"></script>
+        <script type="text/javascript" src="js/script.js"></script>
+        <script>document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>')</script>
+    </body>
+</html>
