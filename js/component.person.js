@@ -27,8 +27,10 @@ const STATUS = {
 
 class Person extends Component {
 
-    constructor(label, position, velocity) {
+    constructor(label, position, velocity, radius) {
         super(label, position, velocity);
+
+        this.initialRadius = radius;
 
         this.reset();
     }
@@ -36,7 +38,7 @@ class Person extends Component {
     reset() {
         super.reset();
 
-        this.radius = 15;
+        this.radius = this.initialRadius;
         this.status = STATUS.HEALTHY;
         this.infectedTime = -1;
     }
@@ -53,7 +55,7 @@ class Person extends Component {
         var color = this.status.color;
 
         var fontSize = this.radius * 2.0;
-        var colorBold = bold ? '800' : '';
+        var colorBold = bold ? '800' : '1';
 
         ctx.beginPath();
         ctx.fillStyle = color;

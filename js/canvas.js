@@ -1,6 +1,6 @@
 class Canvas extends EventEmitter {
 
-    constructor(canvasId) {
+    constructor(canvasId, speed, radius) {
         super();
 
         this.canvas = document.getElementById(canvasId);
@@ -16,25 +16,25 @@ class Canvas extends EventEmitter {
         this.isRunning = false;
         this.animation = null;
         this.iteration = 0;
-        this.speed = 1;
+        this.speed = speed;
+        this.radius = radius;
 
+        this.showGrid = false;
         this.useTheSameSpeed = true;
 
         // ctx.transform(1, 0, 0, -1, 0, canvas.height)
     }
 
-    init(numberOfPoints) {
+    init(positions) {
 
         this.points = [];
 
-        for (var i = 0; i < numberOfPoints; i++) {
+        for (var i = 0; i < positions.length; i++) {
 
-            var x = Random.randInt(40, this.canvasWidth - 40);
-            var y = Random.randInt(40, this.canvasHeight - 40);
             var vx = Random.randElement([1, -1]);
             var vy = Random.randElement([1, -1]);
 
-            this.addPoint(i, x, y, vx, vy);
+            this.addPoint(i, positions[i][0], positions[i][1], vx, vy);
         }
 
         this.emit("init", this.points);
@@ -42,20 +42,7 @@ class Canvas extends EventEmitter {
 
     addPoint(label, x, y, vx, vy) {
 
-        var p = {
-            label: label,
-
-            initialPosition: [x, y],
-            initialVelocity: [vx, vy],
-
-            position: [x, y],
-            velocity: [vx, vy],
-
-            radius: 10,
-            weight: 1,
-        }
-
-        p = new Person(label, [x, y], [vx, vy]);
+        var p = new Person(label, [x, y], [vx, vy], this.radius);
 
         this.emit("newPoint", p);
 
@@ -153,9 +140,47 @@ class Canvas extends EventEmitter {
 
     drawCircle(c) {
         c.draw(this.ctx);
+
+        if (this.showGrid) {
+
+            var vLines = this.canvasWidth / this.radius * 2;
+            var hLines = this.canvasHeight / this.radius * 2;
+
+            for (var i = 0; i < vLines; i++) {
+                this.ctx.beginPath();
+                this.ctx.moveTo(i * this.radius * 2, 0);
+                this.ctx.lineTo(i * this.radius * 2, this.canvasHeight);
+                this.ctx.stroke();
+            }
+            for (var i = 0; i < hLines; i++) {
+                this.ctx.beginPath();
+                this.ctx.moveTo(0, i * this.radius * 2);
+                this.ctx.lineTo(this.canvasWidth, i * this.radius * 2);
+                this.ctx.stroke();
+            }
+        }
     }
 
-    verifyCollision(c1, c2){
+    getAvailablePositions(){
+
+        var positions = [];
+
+        var vLines = this.canvasWidth / this.radius * 2;
+        var hLines = this.canvasHeight / this.radius * 2;
+
+        for (var i = this.radius * 2; i < this.canvasWidth; i += this.radius * 2+5) {
+
+            for (var j = this.radius * 2; j < this.canvasHeight; j += this.radius * 2+5) {
+                positions.push([i, j]);
+
+                //this.addPoint(i, i, j, 2, 2);
+            }
+        }
+
+        return positions;
+    }
+
+    verifyCollision(c1, c2) {
 
         if (Collision.betweenTwoCircles(c1.position, c2.position, c1.radius, c2.radius)) {
 
@@ -272,7 +297,7 @@ class Canvas extends EventEmitter {
         c.velocity = v1;
     }
 
-    getStatus(){
+    getStatus() {
 
         var status = {
             infected: 0,
@@ -284,13 +309,13 @@ class Canvas extends EventEmitter {
 
             var p = this.points[i];
 
-            if(p.status == STATUS.DEAD){
+            if (p.status == STATUS.DEAD) {
                 status.deaths++;
             }
-            if(p.status == STATUS.INFECTED){
+            if (p.status == STATUS.INFECTED) {
                 status.infected++;
             }
-            if(p.status == STATUS.RECOVERED){
+            if (p.status == STATUS.RECOVERED) {
                 status.recovered++;
             }
         }

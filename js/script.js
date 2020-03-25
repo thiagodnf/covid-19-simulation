@@ -1,11 +1,12 @@
 var canvas;
 var chart;
 
-var numberOfPeople = 100;
+var numberOfPeople = 150;
 var numberOfInfected = 1;
 var timeInfected = 3;
 var deathProbability = 0.95;
-var speed = 2;
+var speed = 1;
+var radius = 8;
 var socialDistancing = 0.0;
 
 // JQuery Components
@@ -20,24 +21,27 @@ var $infectedPeople;
 var $timeInfected;
 var $deathProbability;
 var $speed;
+var $radius;
 var $socialDistancing;
 
 function reset(){
 
+    canvas = new Canvas("canvas", speed, radius);
+
+    var availablePositions = canvas.getAvailablePositions();
+
+    var selectedPositions = Random.getRandomValues(availablePositions, numberOfPeople);
+
     var indexes = [].range(0, numberOfPeople - 1);
 
-    var numberOfFixed = socialDistancing*numberOfPeople;
+    var numberOfFixed = socialDistancing * numberOfPeople;
+    var fixedIndexes = Random.getRandomValues(indexes, numberOfFixed);
 
-    var fixedIndexes = Random.getRandomIndexes(indexes, numberOfFixed);
     var freeIndexes = indexes.filter(v => !fixedIndexes.includes(v));
 
     var infectedIndexes = Random.getRandomIndexes(freeIndexes, numberOfInfected);
 
-    canvas = new Canvas("canvas");
-
     canvas.on("reset", (points) => {
-
-        canvas.speed = speed;
 
         infectedIndexes.forEach(index => {
             points[index].setInfected();
@@ -104,7 +108,7 @@ function reset(){
         }
     });
 
-    canvas.init(numberOfPeople);
+    canvas.init(selectedPositions);
 
     canvas.reset();
 }
@@ -155,6 +159,7 @@ $(function () {
     $timeInfected = $("#timeInfected");
     $deathProbability = $("#deathProbability");
     $speed = $("#speed");
+    $radius = $("#radius");
     $socialDistancing = $("#socialDistancing");
 
     $("#settings").submit(function (event) {
@@ -176,6 +181,7 @@ $(function () {
         deathProbability = parseFloat($deathProbability.val());
         speed = parseFloat($speed.val());
         socialDistancing = parseFloat($socialDistancing.val());
+        radius = parseFloat($radius.val());
 
         reset();
 
@@ -200,6 +206,7 @@ $(function () {
     $timeInfected.val(timeInfected);
     $deathProbability.val(deathProbability);
     $speed.val(speed);
+    $radius.val(radius);
     $socialDistancing.val(socialDistancing);
 
     $btnStart.on("click", function () {

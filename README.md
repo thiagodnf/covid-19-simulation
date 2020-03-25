@@ -1,2 +1,2 @@
-# covid-19-simulation
+# COVID-19 Simulation
  
