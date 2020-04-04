@@ -40,7 +40,7 @@ class Person extends Component {
 
         this.radius = this.initialRadius;
         this.status = STATUS.HEALTHY;
-        this.infectedTime = -1;
+        this.infectedTime = null;
     }
 
     setInfected(){

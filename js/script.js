@@ -45,6 +45,7 @@ function reset(){
 
         infectedIndexes.forEach(index => {
             points[index].setInfected();
+            points[index].infectedTime = null;
         });
 
         fixedIndexes.forEach(index => {
@@ -91,18 +92,23 @@ function reset(){
 
             if (p.status == STATUS.INFECTED) {
 
-                var diff = Date.now() - p.infectedTime.getTime();
+                if(p.infectedTime){
 
-                var time = Math.floor(diff / 1000)
+                    var diff = Date.now() - p.infectedTime.getTime();
 
-                if (time > timeInfected) {
+                    var time = Math.floor(diff / 1000)
 
-                    if (Random.randDouble() < deathProbability) {
-                        p.status = STATUS.RECOVERED;
-                    } else {
-                        p.status = STATUS.DEAD;
-                        p.fixed = true;
+                    if (time > timeInfected) {
+
+                        if (Random.randDouble() < deathProbability) {
+                            p.status = STATUS.RECOVERED;
+                        } else {
+                            p.status = STATUS.DEAD;
+                            p.fixed = true;
+                        }
                     }
+                }else{
+                    p.infectedTime = new Date();
                 }
             }
         }

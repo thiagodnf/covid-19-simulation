@@ -17,15 +17,17 @@ class Random {
 
     static getRandomIndexes(array, size) {
 
+        var indexes = Array(array.length).fill().map((el, i) => i);
+
         var selectedIndexes = [];
 
         while (selectedIndexes.length < size) {
 
-            var index = Random.randInt(0, array.length - 1);
+            var index = Random.randInt(0, indexes.length - 1);
 
-            selectedIndexes.push(index);
+            selectedIndexes.push(indexes[index]);
 
-            array = array.removeByIndex(index);
+            indexes = indexes.removeByIndex(index);
         }
 
         return selectedIndexes;

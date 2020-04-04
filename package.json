@@ -13,10 +13,10 @@
     "author": "Thiago Ferreira",
     "license": "MIT",
     "dependencies": {
-        "serve-static": "^1.13.2",
         "connect": "^3.6.6",
+        "livereload": "^0.9.1",
         "network": "^0.4.1",
-        "winston": "^2.4.2",
-        "livereload": "^0.7.0"
+        "serve-static": "^1.13.2",
+        "winston": "^2.4.2"
     }
 }
